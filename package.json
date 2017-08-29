@@ -21,7 +21,8 @@
     "request": "^2.81.0"
   },
   "devDependencies": {
-    "ejs": "^2.5.7",
-    "y-server": "~0.0.1"
+    "y-server": "~0.0.1",
+    "y-server-plugin-ejs": "0.0.1",
+    "y-server-plugin-mock": "0.0.1"
   }
 }

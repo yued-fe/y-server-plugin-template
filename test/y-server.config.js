@@ -2,8 +2,9 @@
 
 const path = require('path');
 
-const mockPlugin = require('../../y-server-plugin-mock/index.js');
-const ejsPlugin = require('../../y-server-plugin-ejs/index.js');
+const mockPlugin = require('y-server-plugin-mock');
+const ejsPlugin = require('y-server-plugin-ejs');
+
 const templatePlugin = require('../index.js');
 
 module.exports = {
