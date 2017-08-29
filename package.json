@@ -1,0 +1,27 @@
+{
+  "name": "y-server-plugin-template",
+  "version": "0.0.1",
+  "author": "SmadeyZhang",
+  "license": "MIT",
+  "description": "y-server template render plugin",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yued-fe/y-server-plugin-template.git"
+  },
+  "scripts": {
+    "test": "y-server --config ./test/y-server.config.js --hot"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "ejs": "^2.5.7",
+    "y-server": "~0.0.1"
+  }
+}
