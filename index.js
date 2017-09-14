@@ -67,6 +67,7 @@ module.exports = function (options) {
 
   const apiServer = options.apiServer;
   const apiOptions = options.apiOptions || {};
+
   const defaultReqOptions = Object.assign({}, apiOptions, { query: null }); // query 在后续生成
   const defaultReqQuery = apiOptions.query;
 
@@ -103,9 +104,14 @@ module.exports = function (options) {
         urlObj.search = null; // 有 search 时 query 不生效
         urlObj.query = Object.assign({}, defaultReqQuery, req.query, urlObj.query, req.params);
 
-        const reqOptions = Object.assign({
+        const headers = Object.assign({
+          cookie: req.headers.cookie, // 需要登录态的页面一般依赖 cookie
+        }, defaultReqOptions.headers);
+
+        const reqOptions = Object.assign({}, defaultReqOptions, {
           url: urlObj,
-        }, defaultReqOptions);
+          headers: headers,
+        });
 
         requestRemote(reqOptions).then(function (data) {
           res.render(view, data);

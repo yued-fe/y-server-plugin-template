@@ -8,10 +8,11 @@ const ejsPlugin = require('y-server-plugin-ejs');
 const templatePlugin = require('../index.js');
 
 module.exports = {
+  port: 8889,
   watch: path.join(__dirname, '../index.js'),
   plugins: [
     mockPlugin({
-      mockEnable: true,
+      mockEnable: false,
       mockDir: path.join(__dirname, './json'), // 模拟数据根目录
       mockAdapter: require('./json/adapter.js'),
     }),
@@ -27,6 +28,7 @@ module.exports = {
         '/': { view: 'template.html' },
         '/rank': { view: 'template.html', cgi: '/majax/rank' },
         'localhost:10024/category': { view: 'template.html', cgi: '/majax/category' },
+        '/user': { view: 'template.html', cgi: '/majax/user/index' }, // 需要登录态页面验证
       },
       apiServer: 'http://m.readnovel.com', // 后端 server
       apiOptions: {
