@@ -24,8 +24,9 @@ module.exports = {
     }),
     templatePlugin({
       routes: {
-        '/rank': { view: 'rank.html', cgi: '/majax/rank' },
-        'localhost:10024/category': { view: 'rank.html', cgi: '/majax/category' },
+        '/': { view: 'template.html' },
+        '/rank': { view: 'template.html', cgi: '/majax/rank' },
+        'localhost:10024/category': { view: 'template.html', cgi: '/majax/category' },
       },
       apiServer: 'http://m.readnovel.com', // 后端 server
       apiOptions: {

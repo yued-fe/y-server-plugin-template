@@ -1,6 +1,6 @@
 {
   "name": "y-server-plugin-template",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "SmadeyZhang",
   "license": "MIT",
   "description": "y-server template render plugin",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "y-server": "~0.0.1",
-    "y-server-plugin-ejs": "0.0.1",
-    "y-server-plugin-mock": "0.0.1"
+    "y-server-plugin-ejs": "0.0.2",
+    "y-server-plugin-mock": "0.0.6"
   }
 }
