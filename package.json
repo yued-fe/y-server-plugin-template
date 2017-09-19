@@ -1,13 +1,12 @@
 {
   "name": "y-server-plugin-template",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "SmadeyZhang",
   "license": "MIT",
   "description": "y-server template render plugin",
   "main": "index.js",
   "files": [
-    "index.js",
-    "lib/"
+    "index.js"
   ],
   "repository": {
     "type": "git",

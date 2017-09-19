@@ -30,7 +30,7 @@ module.exports = {
         'localhost:10024/category': { view: 'template.html', cgi: '/majax/category' },
         '/user': { view: 'template.html', cgi: '/majax/user/index' }, // 需要登录态页面验证
       },
-      apiServer: 'http://m.readnovel.com', // 后端 server
+      apiServer: 'https://m.readnovel.com', // 后端 server
       apiOptions: {
         query: {},
         headers: {},

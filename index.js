@@ -3,7 +3,7 @@ require('colors');
 
 const url = require('url');
 
-const requestRemote = require('./lib/requestRemote.js');
+const request = require('request');
 
 function each(obj, fn) {
   if (!obj) {
@@ -108,15 +108,47 @@ module.exports = function (options) {
           cookie: req.headers.cookie, // 需要登录态的页面一般依赖 cookie
         }, defaultReqOptions.headers);
 
-        const reqOptions = Object.assign({}, defaultReqOptions, {
-          url: urlObj,
+        const uri = url.format(urlObj);
+
+        const reqOptions = Object.assign({
+          gzip: true,
+          timeout: 5000,
+        }, defaultReqOptions, {
+          method: 'GET',
+          uri: uri,
           headers: headers,
+          followRedirect: false, // 不能跟随重定向，否则不能获取不到301或302状态
         });
 
-        requestRemote(reqOptions).then(function (data) {
-          res.render(view, data);
-        }, next);
+        console.log('[数据请求]'.blue, `请求"${uri}"开始`);
+        request(reqOptions, function (error, response, body) {
+          if (error) {
+            console.log('[数据请求]'.red, `请求"${uri}"出错`);
+            next(error);
+          } else {
+            const statusCode = response.statusCode;
+            if (statusCode === 200) {
+              let data;
+              try {
+                data = JSON.parse(body);
+              } catch (ex) {
+                console.log('[数据请求]'.red, `请求"${uri}"结果非JSON格式`);
+                return next(new Error(`请求"${uri}"结果非JSON格式:\n${body}`));
+              }
+              console.log('[数据请求]'.green, `请求"${uri}"成功`);
+              res.render(view, data);
+            } else if (statusCode === 301 || statusCode === 302) {
+              const location = response.headers.location;
+              console.log('[数据请求]'.red, `请求"${uri}"被重定向到"${location}"`);
+              res.redirect(location); // 重定向
+            } else {
+              console.log('[数据请求]'.red, `请求"${uri}"状态码为"${statusCode}"`);
+              next(new Error(response)); // 非200/301/302直接将结果作为错误，后续有需求在处理
+            }
+          }
+        });
       });
     });
   };
 };
+
