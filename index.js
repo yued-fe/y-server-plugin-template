@@ -136,6 +136,11 @@ module.exports = function (options) {
                 return next(new Error(`请求"${uri}"结果非JSON格式:\n${body}`));
               }
               console.log('[数据请求]'.green, `请求"${uri}"成功`);
+
+              // 设置 cookie, 否则 cookie 不同步, 容易导致登录态等信息丢失
+              if (response.headers['set-cookie']) {
+                res.set('set-cookie', response.headers['set-cookie']);
+              }
               res.render(view, data);
             } else if (statusCode === 301 || statusCode === 302) {
               const location = response.headers.location;
@@ -151,4 +156,3 @@ module.exports = function (options) {
     });
   };
 };
-
