@@ -108,22 +108,22 @@ module.exports = function (options) {
           cookie: req.headers.cookie, // 需要登录态的页面一般依赖 cookie
         }, defaultReqOptions.headers);
 
-        const uri = url.format(urlObj);
+        const uri = urlObj.format();
 
         const reqOptions = Object.assign({
           gzip: true,
           timeout: 5000,
+          followRedirect: false, // 不能跟随重定向，否则不能获取不到301或302状态
         }, defaultReqOptions, {
           method: 'GET',
           uri: uri,
           headers: headers,
-          followRedirect: false, // 不能跟随重定向，否则不能获取不到301或302状态
         });
 
-        console.log('[数据请求]'.blue, `请求"${uri}"开始`);
+        console.log('[模板渲染]'.blue, `请求"${uri}"开始`);
         request(reqOptions, function (error, response, body) {
           if (error) {
-            console.log('[数据请求]'.red, `请求"${uri}"出错`);
+            console.log('[模板渲染]'.red, `请求"${uri}"出错`);
             next(error);
           } else {
             const statusCode = response.statusCode;
@@ -132,22 +132,27 @@ module.exports = function (options) {
               try {
                 data = JSON.parse(body);
               } catch (ex) {
-                console.log('[数据请求]'.red, `请求"${uri}"结果非JSON格式`);
+                console.log('[模板渲染]'.red, `请求"${uri}"结果非JSON格式`);
                 return next(new Error(`请求"${uri}"结果非JSON格式:\n${body}`));
               }
-              console.log('[数据请求]'.green, `请求"${uri}"成功`);
+              console.log('[模板渲染]'.green, `请求"${uri}"成功`);
 
               // 设置 cookie, 否则 cookie 不同步, 容易导致登录态等信息丢失
               if (response.headers['set-cookie']) {
-                res.set('set-cookie', response.headers['set-cookie']);
+                const cookies = response.headers['set-cookie'];
+                const replace = function (cookie) {
+                  // 移除 domain，否则域名不一致会导致 cookie 丢失
+                  return typeof cookie === 'string' ? cookie.replace(/(;\s*domain=)([^;]+)/i, '') : cookie;
+                };
+                res.set('set-cookie', Array.isArray(cookies) ? cookies.map(replace) : replace(cookies));
               }
               res.render(view, data);
             } else if (statusCode === 301 || statusCode === 302) {
               const location = response.headers.location;
-              console.log('[数据请求]'.red, `请求"${uri}"被重定向到"${location}"`);
+              console.log('[模板渲染]'.red, `请求"${uri}"被重定向到"${location}"`);
               res.redirect(location); // 重定向
             } else {
-              console.log('[数据请求]'.red, `请求"${uri}"状态码为"${statusCode}"`);
+              console.log('[模板渲染]'.red, `请求"${uri}"状态码为"${statusCode}"`);
               next(new Error(response)); // 非200/301/302直接将结果作为错误，后续有需求在处理
             }
           }
