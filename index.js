@@ -94,21 +94,21 @@ module.exports = function (options) {
           return res.render(view);
         }
 
-        if (res.getMockData) {
-          return res.getMockData(routeConfig.cgi).then(function (data) {
-            res.render(routeConfig.view, data);
-          }).catch(next);
-        }
-
         const urlObj = url.parse(`${apiServer}${cgi}`, true, true);
         urlObj.search = null; // 有 search 时 query 不生效
         urlObj.query = Object.assign({}, defaultReqQuery, req.query, urlObj.query, req.params);
 
+        const uri = urlObj.format();
+
+        if (res.getMockData) {
+          return res.getMockData(uri).then(function (data) {
+            res.render(view, data);
+          }).catch(next);
+        }
+
         const headers = Object.assign({
           cookie: req.headers.cookie, // 需要登录态的页面一般依赖 cookie
         }, defaultReqOptions.headers);
-
-        const uri = urlObj.format();
 
         const reqOptions = Object.assign({
           gzip: true,
