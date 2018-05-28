@@ -108,6 +108,7 @@ module.exports = function (options) {
 
         const headers = Object.assign({
           cookie: req.headers.cookie, // 需要登录态的页面一般依赖 cookie
+          'user-agent': req.headers['user-agent'], // 需要登录态的页面一般依赖 cookie
         }, defaultReqOptions.headers);
 
         const reqOptions = Object.assign({

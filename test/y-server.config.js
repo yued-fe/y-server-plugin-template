@@ -26,7 +26,7 @@ module.exports = {
     templatePlugin({
       routes: {
         '/': { view: 'template.html' },
-        '/rank': { view: 'template.html', cgi: '/majax/rank' },
+        '/rank': { view: 'template.html', cgi: '/majax/rank/list' },
         'localhost:10024/category': { view: 'template.html', cgi: '/majax/category' },
         '/user': { view: 'template.html', cgi: '/majax/user/index' }, // 需要登录态页面验证
       },
